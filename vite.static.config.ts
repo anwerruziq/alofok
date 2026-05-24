@@ -9,7 +9,7 @@ import path from "path";
 export default defineConfig({
   plugins: [react(), tailwindcss(), tsconfigPaths()],
   build: {
-    outDir: "dist-static",
+    outDir: "build.dist",
     emptyOutDir: true,
     rollupOptions: {
       input: path.resolve(__dirname, "index.html"),
