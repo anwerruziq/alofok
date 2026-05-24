@@ -602,7 +602,7 @@ export default function Overlay({
 function ProjectsSection() {
   const projects = [
     {
-      src: "https://images.unsplash.com/photo-1541888086425-d81bb19240f5?auto=format&fit=crop&w=800&q=80",
+      src: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=800&q=80",
       name: "برج الأعمال المركزي",
       type: "تشييد أبراج مكتبية",
     },
