@@ -414,7 +414,7 @@ export default function Overlay({
       if (tourHeight <= 0) return;
       
       // Smooth, consistent speed — lower multiplier prevents erratic jumps
-      const progressDelta = -dy * 0.001;
+      const progressDelta = dy * 0.001;
       let newP = scrollRef.current + progressDelta;
       newP = Math.max(0, Math.min(1, newP));
       
