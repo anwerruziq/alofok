@@ -94,13 +94,7 @@ export const SECTIONS = [
 export type MoveState = { forward: number; strafe: number; up: number; boost: boolean };
 
 function City({ onReady, onMeshInfo }: { onReady: (g: THREE.Group) => void; onMeshInfo: (info: string) => void }) {
-  const draco = useMemo(() => {
-    const loader = new DRACOLoader();
-    loader.setDecoderPath("/draco/");
-    return loader;
-  }, []);
-
-  const { scene } = useGLTF("/models/future_city.glb", draco);
+  const { scene } = useGLTF("/models/future_city.glb", "https://www.gstatic.com/draco/versioned/decoders/1.5.5/");
   const ref = useRef<THREE.Group>(null);
 
   const cloned = useMemo(() => {
@@ -529,4 +523,4 @@ export default function CityScene({
   );
 }
 
-useGLTF.preload("/models/future_city.glb");
+useGLTF.preload("/models/future_city.glb", "https://www.gstatic.com/draco/versioned/decoders/1.5.5/");
