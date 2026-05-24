@@ -55,7 +55,7 @@ function MobileJoystick({
     // Reasonable deadzone to prevent drift from tiny touches
     if (Math.abs(x) > 0.08 || Math.abs(y) > 0.08) {
       // Vertical axis: move along path (negative y = forward)
-      const progressDelta = y * 0.004;
+      const progressDelta = -y * 0.004;
       let newP = scrollRef.current + progressDelta;
       newP = Math.max(0, Math.min(1, newP));
       scrollRef.current = newP;
