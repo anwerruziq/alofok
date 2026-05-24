@@ -541,7 +541,7 @@ export default function Overlay({
         </div>
         {/* Hero text */}
         <h1
-          className="-mt-4 sm:-mt-6 md:-mt-10 lg:-mt-16 text-5xl sm:text-6xl md:text-8xl lg:text-9xl font-bold text-gray-200 drop-shadow-[0_4px_20px_rgba(255,255,255,0.3)] text-center tracking-wide"
+          className="-mt-4 sm:-mt-6 md:-mt-10 lg:-mt-16 text-5xl sm:text-6xl md:text-8xl lg:text-9xl font-bold text-gray-400 drop-shadow-[0_4px_20px_rgba(255,255,255,0.3)] text-center tracking-wide"
           style={{ fontFamily: "'Cairo', sans-serif" }}
         >
           الأفق العقارية
