@@ -539,12 +539,13 @@ export default function Overlay({
             />
           </a>
         </div>
-        {/* Hero text image */}
-        <img
-          src="/img/logo/hero-text-new.png"
-          alt="الأفق العقارية"
-          className="-mt-10 sm:-mt-16 md:-mt-24 lg:-mt-32 h-40 sm:h-52 md:h-64 lg:h-80 w-auto object-contain drop-shadow-[0_4px_20px_rgba(255,255,255,0.3)]"
-        />
+        {/* Hero text */}
+        <h1
+          className="-mt-4 sm:-mt-6 md:-mt-10 lg:-mt-16 text-5xl sm:text-6xl md:text-8xl lg:text-9xl font-bold text-gray-200 drop-shadow-[0_4px_20px_rgba(255,255,255,0.3)] text-center tracking-wide"
+          style={{ fontFamily: "'Cairo', sans-serif" }}
+        >
+          الأفق العقارية
+        </h1>
         <div
           className="bg-primary mt-4 md:mt-6 mb-3 md:mb-4"
           style={{
