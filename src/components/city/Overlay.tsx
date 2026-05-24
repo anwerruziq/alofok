@@ -52,18 +52,16 @@ function MobileJoystick({
   // Continuously apply movement while joystick is held
   const tick = useCallback(() => {
     const { x, y } = axisRef.current;
-    // Ultra‑tight deadzone for instant response
-    if (Math.abs(x) > 0.005 || Math.abs(y) > 0.005) {
+    // Reasonable deadzone to prevent drift from tiny touches
+    if (Math.abs(x) > 0.08 || Math.abs(y) > 0.08) {
       // Vertical axis: move along path (negative y = forward)
-      // Higher sensitivity for blazing‑fast progress
-      const progressDelta = y * 0.006;
+      const progressDelta = y * 0.004;
       let newP = scrollRef.current + progressDelta;
       newP = Math.max(0, Math.min(1, newP));
       scrollRef.current = newP;
 
-      // Horizontal axis: rotate camera look
-      // Higher sensitivity for rapid yaw (reversed direction)
-      const lookDelta = -x * 0.06;
+      // Horizontal axis: rotate camera look (reversed direction)
+      const lookDelta = -x * 0.04;
       let newLook = lookRef.current + lookDelta;
       newLook = Math.max(-Math.PI / 2.5, Math.min(Math.PI / 2.5, newLook));
       lookRef.current = newLook;
@@ -125,11 +123,16 @@ function MobileJoystick({
   }, [stopTick, lookRef]);
 
   useEffect(() => {
+    // Only handle touchmove/touchend globally when joystick is actively being used
     const onTouchMove = (e: TouchEvent) => {
+      if (!activeRef.current) return;
       e.preventDefault();
       handleMove(e.touches[0].clientX, e.touches[0].clientY);
     };
-    const onTouchEnd = () => handleEnd();
+    const onTouchEnd = () => {
+      if (!activeRef.current) return;
+      handleEnd();
+    };
     window.addEventListener("touchmove", onTouchMove, { passive: false });
     window.addEventListener("touchend", onTouchEnd);
     window.addEventListener("touchcancel", onTouchEnd);
@@ -140,45 +143,6 @@ function MobileJoystick({
       stopTick();
     };
   }, [handleMove, handleEnd, stopTick]);
-
-  // Global swipe handling for whole screen (moves forward on swipe down)
-  useEffect(() => {
-    let startY = 0;
-    let active = false;
-    const handleStart = (e: TouchEvent) => {
-      e.preventDefault();
-      if (e.touches.length === 1) {
-        startY = e.touches[0].clientY;
-        active = true;
-      }
-    };
-    const handleMove = (e: TouchEvent) => {
-      e.preventDefault();
-      if (!active) return;
-      const currentY = e.touches[0].clientY;
-      const dy = currentY - startY; // positive = swipe down
-      if (Math.abs(dy) > 2) {
-        const progressDelta = -dy * 0.006; // inverted: swipe down moves backward
-        let newP = scrollRef.current + progressDelta;
-        newP = Math.max(0, Math.min(1, newP));
-        scrollRef.current = newP;
-        startY = currentY; // reset base for smooth continuous movement
-      }
-    };
-    const handleEnd = () => {
-      active = false;
-    };
-    window.addEventListener('touchstart', handleStart, { passive: false });
-    window.addEventListener('touchmove', handleMove, { passive: false });
-    window.addEventListener('touchend', handleEnd);
-    window.addEventListener('touchcancel', handleEnd);
-    return () => {
-      window.removeEventListener('touchstart', handleStart);
-      window.removeEventListener('touchmove', handleMove);
-      window.removeEventListener('touchend', handleEnd);
-      window.removeEventListener('touchcancel', handleEnd);
-    };
-  }, [scrollRef]);
 
   return (
     <div
@@ -440,18 +404,17 @@ export default function Overlay({
     let isTouch = false;
     let lastY = 0;
     let lastX = 0;
+    let accumulatedDy = 0;
     let velocityY = 0;
-    let velocityX = 0;
     let lastTime = 0;
     let rafId: number | null = null;
 
     const updateControls = (dy: number, dx: number) => {
-      // dy > 0 (swipe down) -> move forward -> increase progress
-      // dy < 0 (swipe up) -> move backward -> decrease progress
       const tourHeight = SECTIONS.length * el.clientHeight;
       if (tourHeight <= 0) return;
       
-      const progressDelta = dy * 0.0015;
+      // Smooth, consistent speed — lower multiplier prevents erratic jumps
+      const progressDelta = dy * 0.001;
       let newP = scrollRef.current + progressDelta;
       newP = Math.max(0, Math.min(1, newP));
       
@@ -459,18 +422,20 @@ export default function Overlay({
       setProgress(newP);
       el.scrollTop = newP * tourHeight;
 
-      // Horizontal Look
-      const lookDelta = -dx * 0.005;
-      let newLook = lookRef.current + lookDelta;
-      newLook = Math.max(-Math.PI / 2.5, Math.min(Math.PI / 2.5, newLook));
-      lookRef.current = newLook;
+      // Horizontal Look (only if dx is significant)
+      if (Math.abs(dx) > 2) {
+        const lookDelta = -dx * 0.003;
+        let newLook = lookRef.current + lookDelta;
+        newLook = Math.max(-Math.PI / 2.5, Math.min(Math.PI / 2.5, newLook));
+        lookRef.current = newLook;
+      }
     };
 
     const applyInertia = () => {
-      if (!isTouch && (Math.abs(velocityY) > 0.1 || Math.abs(velocityX) > 0.1)) {
+      if (!isTouch && Math.abs(velocityY) > 0.05) {
         // Only apply inertia to vertical movement (progress), not look
-        updateControls(velocityY * 16, 0);
-        velocityY *= 0.90;
+        updateControls(velocityY * 12, 0);
+        velocityY *= 0.92; // gentle decay
         rafId = requestAnimationFrame(applyInertia);
       }
     };
@@ -481,10 +446,12 @@ export default function Overlay({
       if (el.scrollTop >= tourHeight) return; // allow native scroll for footer
 
       isTouch = true;
+      accumulatedDy = 0;
       if (rafId) cancelAnimationFrame(rafId);
       lastY = e.touches[0].clientY;
       lastX = e.touches[0].clientX;
       lastTime = performance.now();
+      velocityY = 0;
     };
 
     const handleTouchMove = (e: TouchEvent) => {
@@ -499,8 +466,15 @@ export default function Overlay({
       const dy = touch.clientY - lastY;
       const dx = touch.clientX - lastX;
       
-      velocityY = dy / dt;
-      velocityX = dx / dt;
+      // Only process movement if the delta exceeds a minimum threshold
+      // This prevents micro-jitter from causing direction reversals
+      if (Math.abs(dy) < 1.5 && Math.abs(dx) < 1.5) return;
+
+      // Track accumulated direction to filter out noise
+      accumulatedDy += dy;
+      
+      // Use exponential moving average for velocity to smooth out spikes
+      velocityY = velocityY * 0.6 + (dy / dt) * 0.4;
       
       updateControls(dy, dx);
       
@@ -511,9 +485,12 @@ export default function Overlay({
 
     const handleTouchEnd = () => {
       isTouch = false;
-      // Snap back to front immediately when finger is released
+      // Snap look back to front when finger is released
       lookRef.current = 0;
-      rafId = requestAnimationFrame(applyInertia);
+      // Only apply inertia if the velocity is meaningful and consistent
+      if (Math.abs(velocityY) > 0.08) {
+        rafId = requestAnimationFrame(applyInertia);
+      }
     };
 
     el.addEventListener("touchstart", handleTouchStart, { passive: false });
