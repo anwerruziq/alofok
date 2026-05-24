@@ -24,9 +24,8 @@ function FadeInView({ children, delay = 0, className = "" }: { children: React.R
     <div
       ref={ref}
       style={{ transitionDelay: `${delay}ms` }}
-      className={`transition-all duration-1000 ease-out transform ${
-        isVisible ? "opacity-100 translate-y-0 blur-none" : "opacity-0 translate-y-12 blur-sm"
-      } ${className}`}
+      className={`transition-all duration-1000 ease-out transform ${isVisible ? "opacity-100 translate-y-0 blur-none" : "opacity-0 translate-y-12 blur-sm"
+        } ${className}`}
     >
       {children}
     </div>
@@ -253,7 +252,7 @@ function MobileJoystick({
         textTransform: "uppercase",
         userSelect: "none",
       }}>
-        تحريك
+
       </div>
     </div>
   );
@@ -274,7 +273,7 @@ function NavBar() {
   }, [isOpen]);
 
   const links = [
-    { label: "الجولة", href: "#" },
+    { label: "الجولة", href: "#home" },
     { label: "مشاريعنا", href: "#projects" },
     { label: "خدماتنا", href: "#services" },
     { label: "تواصل معنا", href: "#contact" },
@@ -293,13 +292,13 @@ function NavBar() {
             <span className="text-[10px] md:text-xs text-white/50 font-mono tracking-wider">AL OFOQ REAL ESTATE</span>
           </div>
         </a>
-        
+
         {/* Desktop Menu */}
         <div className="hidden md:flex gap-10 items-center">
           {links.map((link, i) => (
-            <a 
-              key={i} 
-              href={link.href} 
+            <a
+              key={i}
+              href={link.href}
               className="group relative font-mono text-xs text-white/70 hover:text-white transition-colors uppercase tracking-[0.15em]"
             >
               {link.label}
@@ -312,8 +311,8 @@ function NavBar() {
         </div>
 
         {/* Mobile Hamburger (Custom Animated) */}
-        <button 
-          className="md:hidden relative w-8 h-8 flex flex-col justify-center items-end gap-1.5 z-[70] focus:outline-none group" 
+        <button
+          className="md:hidden relative w-8 h-8 flex flex-col justify-center items-end gap-1.5 z-[70] focus:outline-none group"
           onClick={() => setIsOpen(!isOpen)}
         >
           <span className={`h-[1px] bg-white transition-all duration-300 ${isOpen ? "w-6 rotate-45 translate-y-[7px]" : "w-8 group-hover:w-6"}`} />
@@ -323,23 +322,23 @@ function NavBar() {
       </nav>
 
       {/* Fullscreen Mobile Menu Overlay */}
-      <div 
+      <div
         className={`fixed inset-0 z-[55] bg-black/95 backdrop-blur-3xl flex flex-col justify-center items-center transition-all duration-500 ${isOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none delay-200"}`}
       >
         <div className="flex flex-col items-center gap-8 w-full px-6">
           {links.map((link, i) => (
-            <a 
-              key={i} 
-              href={link.href} 
-              onClick={() => setIsOpen(false)} 
+            <a
+              key={i}
+              href={link.href}
+              onClick={() => setIsOpen(false)}
               className={`font-display text-2xl sm:text-3xl text-white tracking-widest transition-all duration-500 transform hover:text-primary ${isOpen ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"}`}
               style={{ transitionDelay: `${isOpen ? 100 + i * 100 : 0}ms` }}
             >
               {link.label}
             </a>
           ))}
-          
-          <div 
+
+          <div
             className={`mt-12 flex flex-col items-center gap-6 transition-all duration-500 transform ${isOpen ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"}`}
             style={{ transitionDelay: `${isOpen ? 500 : 0}ms` }}
           >
@@ -399,7 +398,7 @@ export default function Overlay({
       }
     };
     el.addEventListener("scroll", onScroll, { passive: true });
-    
+
     // Custom Touch Controls for Mobile
     let isTouch = false;
     let lastY = 0;
@@ -412,12 +411,12 @@ export default function Overlay({
     const updateControls = (dy: number, dx: number) => {
       const tourHeight = SECTIONS.length * el.clientHeight;
       if (tourHeight <= 0) return;
-      
+
       // Smooth, consistent speed — lower multiplier prevents erratic jumps
       const progressDelta = -dy * 0.001;
       let newP = scrollRef.current + progressDelta;
       newP = Math.max(0, Math.min(1, newP));
-      
+
       scrollRef.current = newP;
       setProgress(newP);
       el.scrollTop = newP * tourHeight;
@@ -456,28 +455,28 @@ export default function Overlay({
 
     const handleTouchMove = (e: TouchEvent) => {
       if (!isTouch || window.innerWidth > 768) return;
-      
+
       // Prevent native scroll
       if (e.cancelable) e.preventDefault();
-      
+
       const now = performance.now();
       const dt = Math.max(1, now - lastTime);
       const touch = e.touches[0];
       const dy = touch.clientY - lastY;
       const dx = touch.clientX - lastX;
-      
+
       // Only process movement if the delta exceeds a minimum threshold
       // This prevents micro-jitter from causing direction reversals
       if (Math.abs(dy) < 1.5 && Math.abs(dx) < 1.5) return;
 
       // Track accumulated direction to filter out noise
       accumulatedDy += dy;
-      
+
       // Use exponential moving average for velocity to smooth out spikes
       velocityY = velocityY * 0.6 + (dy / dt) * 0.4;
-      
+
       updateControls(dy, dx);
-      
+
       lastY = touch.clientY;
       lastX = touch.clientX;
       lastTime = now;
@@ -501,7 +500,7 @@ export default function Overlay({
       setIntroVisible(true);
       setTimeout(() => setIntroAnimated(true), 80);
     }, 300);
-    
+
     return () => {
       el.removeEventListener("scroll", onScroll);
       el.removeEventListener("touchstart", handleTouchStart);
@@ -519,7 +518,7 @@ export default function Overlay({
 
       {/* Intro Company Name */}
       <div
-        className="pointer-events-none fixed inset-0 z-20 flex flex-col items-center justify-center px-4 pb-16 md:pb-24"
+        className="pointer-events-none fixed inset-0 z-20 flex flex-col items-center justify-start px-4 pt-20 md:pt-28"
         style={{
           visibility: introVisible ? "visible" : "hidden",
           opacity: introAnimated ? 1 : 0,
@@ -535,13 +534,13 @@ export default function Overlay({
             <img
               src="/img/logo/logo-color.png"
               alt="الأفق للمقاولات"
-              className="h-32 sm:h-40 md:h-52 w-auto object-contain drop-shadow-[0_4px_20px_rgba(191,161,95,0.4)]"
+              className="h-44 sm:h-52 md:h-64 lg:h-72 w-auto object-contain drop-shadow-[0_4px_20px_rgba(191,161,95,0.4)]"
             />
           </a>
         </div>
         {/* Hero text */}
         <h1
-          className="-mt-4 sm:-mt-6 md:-mt-10 lg:-mt-16 text-5xl sm:text-6xl md:text-8xl lg:text-9xl font-bold text-gray-400 drop-shadow-[0_4px_20px_rgba(255,255,255,0.3)] text-center tracking-wide"
+          className="mt-2 text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-[#c0c0c0] drop-shadow-[0_4px_20px_rgba(255,255,255,0.3)] text-center tracking-wide"
           style={{ fontFamily: "'Cairo', sans-serif" }}
         >
           الأفق العقارية
@@ -711,7 +710,7 @@ function ServicesSection() {
       <section id="services" className="py-20 md:py-32 px-4 sm:px-6 md:px-12 max-w-7xl mx-auto border-t border-white/5 scroll-mt-20 relative">
         {/* Subtle background glow */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3/4 h-3/4 bg-primary/5 blur-[120px] rounded-full pointer-events-none" />
-        
+
         <FadeInView className="mb-12 md:mb-20 text-center flex flex-col items-center relative z-10">
           <span className="text-primary text-xs tracking-[0.3em] uppercase mb-4 font-mono">Our Services</span>
           <h2 className="font-display text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-6 tracking-wide">
@@ -722,7 +721,7 @@ function ServicesSection() {
             نقدم حلول بناء شاملة تبدأ من وضع حجر الأساس وصولاً للتسليم النهائي بمهنية واحترافية عالية.
           </p>
         </FadeInView>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 relative z-10">
           {services.map((s, i) => (
             <FadeInView
@@ -765,7 +764,7 @@ function ServicesSection() {
             className="bg-[#0a0a0a] border border-white/10 rounded-2xl p-8 md:p-12 max-w-2xl w-full relative shadow-[0_0_50px_rgba(191,161,95,0.1)] transform scale-100 opacity-100 transition-all duration-300"
             onClick={e => e.stopPropagation()}
           >
-            <button 
+            <button
               className="absolute top-6 left-6 text-white/40 hover:text-white transition-colors"
               onClick={() => setSelected(null)}
             >
@@ -856,10 +855,10 @@ function FooterSection() {
     <footer className="border-t border-primary/20 bg-[#060c18]/90 py-12 md:py-16 px-4 md:px-6 text-center flex flex-col items-center justify-center">
       <a href="/" className="mb-4 flex flex-col items-center gap-2 group pointer-events-auto">
         <div className="relative overflow-hidden transition-transform duration-300 group-hover:scale-105">
-          <img 
-            src="/img/logo/logo-color.png" 
-            alt="الأفق للمقاولات" 
-            className="h-12 md:h-14 w-auto object-contain drop-shadow-[0_0_10px_rgba(255,255,255,0.2)]" 
+          <img
+            src="/img/logo/logo-color.png"
+            alt="الأفق للمقاولات"
+            className="h-12 md:h-14 w-auto object-contain drop-shadow-[0_0_10px_rgba(255,255,255,0.2)]"
           />
         </div>
         <div className="font-display text-base md:text-lg tracking-[0.1em] text-white group-hover:text-primary transition-colors mt-2">
