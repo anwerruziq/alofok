@@ -535,7 +535,7 @@ export default function Overlay({
             <img
               src="/img/logo/logo-color.png"
               alt="الأفق للمقاولات"
-              className="h-24 sm:h-28 md:h-36 w-auto object-contain drop-shadow-[0_4px_20px_rgba(191,161,95,0.4)]"
+              className="h-32 sm:h-40 md:h-52 w-auto object-contain drop-shadow-[0_4px_20px_rgba(191,161,95,0.4)]"
             />
           </a>
         </div>
