@@ -259,7 +259,7 @@ function MobileJoystick({
 }
 
 
-function NavBar() {
+function NavBar({ onTourClick }: { onTourClick?: () => void }) {
   const [isOpen, setIsOpen] = useState(false);
 
   // Prevent body scroll when mobile menu is open
@@ -273,7 +273,7 @@ function NavBar() {
   }, [isOpen]);
 
   const links = [
-    { label: "الجولة", href: "#home" },
+    { label: "الجولة", href: "#home", isTour: true },
     { label: "مشاريعنا", href: "#projects" },
     { label: "خدماتنا", href: "#services" },
     { label: "تواصل معنا", href: "#contact" },
@@ -299,6 +299,12 @@ function NavBar() {
             <a
               key={i}
               href={link.href}
+              onClick={(e) => {
+                if (link.isTour && onTourClick) {
+                  e.preventDefault();
+                  onTourClick();
+                }
+              }}
               className="group relative font-mono text-xs text-white/70 hover:text-white transition-colors uppercase tracking-[0.15em]"
             >
               {link.label}
@@ -330,7 +336,13 @@ function NavBar() {
             <a
               key={i}
               href={link.href}
-              onClick={() => setIsOpen(false)}
+              onClick={(e) => {
+                if (link.isTour && onTourClick) {
+                  e.preventDefault();
+                  onTourClick();
+                }
+                setIsOpen(false);
+              }}
               className={`font-display text-2xl sm:text-3xl text-white tracking-widest transition-all duration-500 transform hover:text-primary ${isOpen ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"}`}
               style={{ transitionDelay: `${isOpen ? 100 + i * 100 : 0}ms` }}
             >
@@ -374,6 +386,13 @@ export default function Overlay({
   const prevProgress = useRef(0);
 
   useEffect(() => {
+    // Reset scroll to top on mount (when refreshing)
+    if (scrollerRef.current) {
+      scrollerRef.current.scrollTop = 0;
+    }
+    scrollRef.current = 0;
+    setProgress(0);
+
     const el = scrollerRef.current;
     if (!el) return;
     const onScroll = () => {
@@ -511,9 +530,15 @@ export default function Overlay({
     };
   }, [scrollRef, lookRef]);
 
+  const handleTourClick = () => {
+    if (scrollerRef.current) {
+      scrollerRef.current.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  };
+
   return (
     <>
-      <NavBar />
+      <NavBar onTourClick={handleTourClick} />
       <MobileJoystick scrollRef={scrollRef} lookRef={lookRef} />
 
       {/* Intro Company Name */}
