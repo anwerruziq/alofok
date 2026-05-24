@@ -284,13 +284,13 @@ function NavBar() {
     <>
       <nav className="fixed top-0 left-0 right-0 z-[60] bg-[#0c1424]/40 backdrop-blur-md border-b border-white/10 px-6 md:px-12 py-3 flex justify-between items-center transition-all animate-fade-in">
         {/* Logo */}
-        <a href="/" className="flex items-center gap-3 group transition-all duration-300 pointer-events-auto">
+        <a href="/" className="flex items-center gap-4 group transition-all duration-300 pointer-events-auto">
           <div className="relative overflow-hidden transition-transform duration-300 group-hover:scale-105">
-            <img src="/img/logo/logo-color.png" alt="الأفق للمقاولات" className="h-10 md:h-12 w-auto object-contain drop-shadow-[0_0_8px_rgba(255,255,255,0.3)]" />
+            <img src="/img/logo/logo-color.png" alt="الأفق للمقاولات" className="h-16 md:h-20 w-auto object-contain drop-shadow-[0_0_8px_rgba(255,255,255,0.3)]" />
           </div>
           <div className="flex flex-col leading-tight">
-            <span className="font-display font-bold text-sm md:text-base tracking-[0.05em] text-white group-hover:text-primary transition-colors">الأفق العقارية</span>
-            <span className="text-[9px] md:text-[10px] text-white/50 font-mono tracking-wider">AL OFOQ REAL ESTATE</span>
+            <span className="font-display font-bold text-base md:text-xl tracking-[0.05em] text-white group-hover:text-primary transition-colors">الأفق العقارية</span>
+            <span className="text-[10px] md:text-xs text-white/50 font-mono tracking-wider">AL OFOQ REAL ESTATE</span>
           </div>
         </a>
         
